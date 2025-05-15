@@ -27,7 +27,7 @@ export default function App() {
 
   return (
     <>
-      <Box sx={{ minWidth: '100vw' }}>
+      <Box sx={{ minWidth: '100vw', maxWidth: '100vw' }}>
         <AppBar position="static">
           <Toolbar variant="dense">
             <IconButton
