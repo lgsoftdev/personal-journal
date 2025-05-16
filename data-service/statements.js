@@ -1,6 +1,6 @@
 const db = require('better-sqlite3')('database.db');
 
-const createTable = () => {
+function createTable() {
   const sql = `
     CREATE TABLE teladds (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -13,45 +13,38 @@ const createTable = () => {
 )
     `;
   db.prepare(sql).run();
-};
+}
 
-// createTable();
-
-const insertIntoTable = (name, address, phone, mobile, email, website) => {
+function insertIntoTelAddsTable(name, address, phone, mobile, email, website) {
   const sql = `
     INSERT INTO teladds (name, address, phone, mobile, email, website)
 VALUES (?, ?, ?, ?, ?, ?);
     `;
   db.prepare(sql).run(name, address, phone, mobile, email, website);
-};
+}
 
-// insertIntoTable(
-//  'Sydney Opera House',
-//  'Bennelong Point Sydney NSW 2000',
-//  '1300 764 849',
-//  null,
-//  null,
-//  null
-//);
+function deleteFromTelAddsById(id) {
+  const sql = `
+    DELETE FROM teladds WHERE id = ?
+    `;
+  db.prepare(sql).run(id);
+}
 
-const getTelAdds = () => {
+function getTelAdds() {
   const sql = `
         SELECT * FROM teladds
     `;
   const rows = db.prepare(sql).all();
-  console.log(rows);
-};
+  return rows;
+}
 
-// getTelAdds();
-
-const getTelAddsByChar = (char) => {
+function getTelAddsByChar(char) {
   const sql = `
         SELECT * FROM teladds
         WHERE lower(name) like '${String(char).toLowerCase()}%' 
     `;
   const rows = db.prepare(sql).all();
-  console.log(rows);
   return rows;
-};
+}
 
-// getTelAddsByChar('S');
+module.exports = { insertIntoTelAddsTable, getTelAdds, getTelAddsByChar };

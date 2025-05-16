@@ -42,7 +42,7 @@ const TelAddsList = () => {
         allowScrollButtonsMobile
       >
         {alphabet.map((e, i) => (
-          <Tab label={e} value={i} />
+          <Tab key={`${e}${i}`} label={e} value={i} />
         ))}
       </Tabs>
       <p>
