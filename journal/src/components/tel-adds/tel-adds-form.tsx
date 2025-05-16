@@ -1,16 +1,49 @@
-import { Box, Button, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormLabel,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import styles from './styles.module.css';
-import { type FormEvent } from 'react';
+import { useCallback, useState, type FormEvent } from 'react';
+import axios from 'axios';
 
 const TelAddsForm = () => {
+  const [info, setInfo] = useState('');
+  const insertNewRecord = useCallback(
+    async (
+      name: string,
+      address?: string,
+      phone?: string,
+      mobile?: string,
+      email?: string,
+      website?: string
+    ) => {
+      await axios
+        .post(`http://localhost:4000/teladds`, {
+          name,
+          address,
+          phone,
+          mobile,
+          email,
+          website,
+        })
+        .then((data) => setInfo(data.statusText))
+        .catch((err) => console.log(err.message));
+    },
+    []
+  );
+
   const handleSave = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formElement = event.target as HTMLFormElement;
     const inputElements = formElement.getElementsByTagName('input');
     const elementsArray = Array.from(inputElements);
-    const name = elementsArray.find(
-      (element) => element.getAttribute('id') === 'name'
-    )?.value;
+    const name =
+      elementsArray.find((element) => element.getAttribute('id') === 'name')
+        ?.value || '';
     const address = elementsArray.find(
       (element) => element.getAttribute('id') === 'address'
     )?.value;
@@ -26,6 +59,8 @@ const TelAddsForm = () => {
     const website = elementsArray.find(
       (element) => element.getAttribute('id') === 'website'
     )?.value;
+
+    insertNewRecord(name, address, phone, mobile, email, website);
   };
 
   return (
@@ -47,9 +82,12 @@ const TelAddsForm = () => {
         </Box>
         <TextField id="email" label="Email" />
         <TextField id="website" label="Website" />
-        <Button type="submit" variant="contained" sx={{ width: 80 }}>
-          Save
-        </Button>
+        <Stack direction="row">
+          <Button type="submit" variant="contained" sx={{ width: 80 }}>
+            Save
+          </Button>
+          <FormLabel>{info}</FormLabel>
+        </Stack>
       </form>
     </Box>
   );
