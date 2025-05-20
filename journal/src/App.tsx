@@ -13,7 +13,7 @@ export default function App() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedMenuOption, setSelectedMenuOption] = useState<
     MenuOptions | undefined
-  >(MenuOptions.Calendar);
+  >(MenuOptions.TelAdds);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -45,7 +45,12 @@ export default function App() {
           </Toolbar>
         </AppBar>
       </Box>
-      <MainMenu anchorEl={anchorEl} open={open} handleClose={handleClose} />
+      <MainMenu
+        anchorEl={anchorEl}
+        open={open}
+        handleClose={handleClose}
+        selectedMenuOption={selectedMenuOption}
+      />
       <Content selectedMenuOption={selectedMenuOption} />
     </>
   );

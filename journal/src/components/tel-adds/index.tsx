@@ -17,7 +17,7 @@ const TelAdds = () => {
       {showForm ? (
         <TelAddsForm />
       ) : (
-        <Stack>
+        <Stack spacing={2}>
           <Stack direction="row" className={styles.contentSpaceBetween}>
             <Typography variant="h6" color="inherit" component="div">
               Telephone and Address List
