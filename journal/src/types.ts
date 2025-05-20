@@ -11,3 +11,19 @@ export type telAddsObj = {
   email: string;
   website: string;
 };
+
+export interface TelAddsItem {
+  name: string;
+  address?: string;
+  lat?: number;
+  lng?: number;
+  phone?: string;
+  mobile?: string;
+  email?: string;
+  website?: string;
+}
+
+export interface Coordinate {
+  lat: number;
+  lng: number;
+}

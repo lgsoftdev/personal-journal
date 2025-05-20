@@ -1,11 +1,13 @@
 const db = require('better-sqlite3')('database.db');
 
-function createTable() {
+function createTelAddsTable() {
   const sql = `
     CREATE TABLE teladds (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     address TEXT,
+    lat REAL,
+    lng REAL,
     phone TEXT,
     mobile TEXT,
     email TEXT,
@@ -15,12 +17,21 @@ function createTable() {
   db.prepare(sql).run();
 }
 
-function insertIntoTelAddsTable(name, address, phone, mobile, email, website) {
+function insertIntoTelAddsTable(
+  name,
+  address,
+  lat,
+  lng,
+  phone,
+  mobile,
+  email,
+  website
+) {
   const sql = `
-    INSERT INTO teladds (name, address, phone, mobile, email, website)
-VALUES (?, ?, ?, ?, ?, ?);
+    INSERT INTO teladds (name, address, lat, lng, phone, mobile, email, website)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
     `;
-  db.prepare(sql).run(name, address, phone, mobile, email, website);
+  db.prepare(sql).run(name, address, lat, lng, phone, mobile, email, website);
 }
 
 function deleteFromTelAddsById(id) {
