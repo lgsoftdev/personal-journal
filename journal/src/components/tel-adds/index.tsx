@@ -15,7 +15,7 @@ const TelAdds = () => {
   return (
     <Box sx={{ margin: '20px' }}>
       {showForm ? (
-        <TelAddsForm />
+        <TelAddsForm onListClick={handleClick} />
       ) : (
         <Stack spacing={2}>
           <Stack direction="row" className={styles.contentSpaceBetween}>

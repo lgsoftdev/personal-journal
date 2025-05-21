@@ -24,8 +24,7 @@ const TelAddsList = () => {
 
   useEffect(() => {
     fetchTelAdds(alphabet[value]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fetchTelAdds]);
+  }, [fetchTelAdds, value]);
 
   return (
     <>
