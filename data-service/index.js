@@ -17,10 +17,12 @@ app.get('/teladds/:char', (req, res) => {
 
 // This route handler provides ability to create a new address entry.
 app.post('/teladds', async (req, res) => {
-  const { name, address, phone, mobile, email, website } = req.body;
+  const { name, address, lat, lng, phone, mobile, email, website } = req.body;
   query.insertIntoTelAddsTable(
     name,
     utils.setNullIfEmpty(address),
+    utils.setNullIfEmpty(lat),
+    utils.setNullIfEmpty(lng),
     utils.setNullIfEmpty(phone),
     utils.setNullIfEmpty(mobile),
     utils.setNullIfEmpty(email),

@@ -10,7 +10,7 @@ const Content = ({ selectedMenuOption }: ContentProps) => {
     case MenuOptions.TelAdds:
       return <TelAdds />;
     default: {
-      return <p>Under construction</p>;
+      return <p style={{ marginLeft: '20px' }}>Under construction</p>;
     }
   }
 };

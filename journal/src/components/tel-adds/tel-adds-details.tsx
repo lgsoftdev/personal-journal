@@ -43,9 +43,10 @@ const TelAddsDetails = ({ itemDetails, onAddressClick }: ItemDetailsProps) => {
 
   const secondaryText = useMemo(() => {
     const addressHtml = getLabelValue('Address', address, lat, lng);
+    const latHtml = getLabelValue('Lat', lat?.toString());
+    const lngHtml = getLabelValue('Lng', lng?.toString());
     const phoneHtml = getLabelValue('Phone', phone);
     const mobileHtml = getLabelValue('Mobile', mobile);
-
     const emailHtml = getLabelValue('Email', email);
     const websiteHtml = getLabelValue('Website', website);
 
@@ -53,8 +54,8 @@ const TelAddsDetails = ({ itemDetails, onAddressClick }: ItemDetailsProps) => {
       <Stack>
         {addressHtml}
         <Stack direction="row" spacing={2}>
-          {getLabelValue('Lat', '151.21519004029523')}
-          {getLabelValue('Lng', '-33.85680043257648')}
+          {latHtml}
+          {lngHtml}
         </Stack>
         <Stack direction="row" spacing={2}>
           {phoneHtml}
