@@ -5,7 +5,7 @@ import styles from './styles.module.css';
 
 interface ItemDetailsProps {
   itemDetails: TelAddsItem;
-  onAddressClick: (latLng: Coordinate) => void;
+  onAddressClick: (latLng: Coordinate, name: string) => void;
 }
 
 const TelAddsDetails = ({ itemDetails, onAddressClick }: ItemDetailsProps) => {
@@ -15,10 +15,10 @@ const TelAddsDetails = ({ itemDetails, onAddressClick }: ItemDetailsProps) => {
     (e: React.SyntheticEvent) => {
       e.preventDefault();
       if (lat && lng) {
-        onAddressClick({ lat, lng });
+        onAddressClick({ lat, lng }, name);
       }
     },
-    [lat, lng, onAddressClick]
+    [name, lat, lng, onAddressClick]
   );
   const getLabelValue = useCallback(
     (label: string, value?: string, lat?: number, lng?: number) => (

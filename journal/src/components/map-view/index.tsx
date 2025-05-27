@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -10,15 +10,29 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { fromLonLat } from 'ol/proj';
 import { Style, Circle, Stroke, Fill } from 'ol/style';
+import VectorLayer from 'ol/layer/Vector';
+import Select from 'ol/interaction/Select';
+import { pointerMove } from 'ol/events/condition';
+import Overlay from 'ol/Overlay';
+import { Coordinate } from 'ol/coordinate';
 
 interface MapViewProps {
   lat?: number;
   lng?: number;
+  tooltipText?: string;
 }
 
-const MapView = ({ lat, lng }: MapViewProps) => {
+const MapView = ({ lat, lng, tooltipText }: MapViewProps) => {
+  const mapRef = useRef<Map | undefined>(undefined);
+  const infoRef = useRef<HTMLDivElement>(null);
+
+  useLayoutEffect(() => {
+    infoRef.current =
+      (document.getElementById('info') as HTMLDivElement) || null;
+  }, []);
+
   useEffect(() => {
-    const map = new Map({
+    mapRef.current = new Map({
       target: 'map',
       layers: [
         new TileLayer({
@@ -31,6 +45,14 @@ const MapView = ({ lat, lng }: MapViewProps) => {
       }),
     });
 
+    return () => {
+      if (mapRef.current) {
+        mapRef.current.setTarget(undefined);
+      }
+    };
+  }, [lat, lng]);
+
+  useEffect(() => {
     const addMarker = () => {
       if (!lat || !lng) {
         return;
@@ -46,27 +68,80 @@ const MapView = ({ lat, lng }: MapViewProps) => {
         style: new Style({
           image: new Circle({
             fill: new Fill({
-              color: [77, 219, 105, 0.6],
+              color: 'dodgerblue',
             }),
             stroke: new Stroke({
-              color: [6, 125, 34, 1],
+              color: 'white',
               width: 2,
             }),
-            radius: 12,
+            radius: 10,
           }),
         }),
       });
-      map.addLayer(layer);
+
+      if (mapRef.current) {
+        const select = new Select({
+          condition: pointerMove,
+          layers: [layer],
+        });
+        mapRef.current.addLayer(layer);
+        mapRef.current.addInteraction(select);
+
+        const overlay = new Overlay({
+          element: infoRef.current || undefined,
+          autoPan: true,
+        });
+        mapRef.current.addOverlay(overlay);
+
+        select.on('select', function (event) {
+          if (infoRef.current) {
+            infoRef.current.innerHTML = '';
+          }
+
+          const features = event.target.getFeatures().getArray();
+          features.map(
+            (feature: {
+              getGeometry: () => {
+                (): unknown;
+                getCoordinates: { (): Coordinate };
+              };
+            }) => {
+              if (infoRef.current) {
+                // Update tooltip content and position
+                overlay.setPosition(feature.getGeometry().getCoordinates());
+                infoRef.current.innerHTML = tooltipText || '';
+              }
+            }
+          );
+        });
+      }
     };
 
-    addMarker();
+    if (mapRef.current) {
+      const layers = mapRef.current.getLayers();
+      const vectorLayers = layers
+        .getArray()
+        .filter((layer) => layer instanceof VectorLayer);
+      vectorLayers.map((layer) => {
+        mapRef.current?.removeLayer(layer);
+      });
+      addMarker();
+    }
+  }, [lat, lng, tooltipText]);
 
-    return () => {
-      map.setTarget(undefined);
-    };
-  }, [lat, lng]);
-
-  return <div id="map" style={{ width: '70%', height: '600px' }} />;
+  return (
+    <div id="map" style={{ width: '70%', height: '600px' }}>
+      <div
+        id="info"
+        ref={infoRef}
+        style={{
+          marginTop: -30,
+          color: 'red',
+          fontWeight: 'bold',
+        }}
+      ></div>
+    </div>
+  );
 };
 
 export default MapView;
